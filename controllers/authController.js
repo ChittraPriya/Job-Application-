@@ -1,5 +1,6 @@
 const User = require("../models/user.js")
 const bcrypt = require('bcrypt')
+const sendEmail = require("../utils/email.js")
 
 const authController = {
     register: async(req, res) => {
@@ -22,6 +23,9 @@ const authController = {
 
             //save the user to the database
             await newUser.save()
+
+            // //send an email to the user
+            // await sendEmail(email, 'Welcome to our app', 'Thankyou for Registering')
 
             res.status(201).json({message: "User Registered Successfully"})
         } catch (error) {
