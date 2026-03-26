@@ -1,6 +1,8 @@
 const User = require("../models/user.js")
 const bcrypt = require('bcrypt')
 const sendEmail = require("../utils/email.js")
+const jwt = require('jsonwebtoken');
+const { JWT_SECRET, NODE_ENV } = require("../utils/config.js")
 
 const authController = {
     register: async(req, res) => {
@@ -50,7 +52,26 @@ const authController = {
                 return res.status(400).json({message: 'Invalid Password'})
             }
 
-            return res.status(200).json({message: 'Login Successfully'})
+            //generte a token
+            const token = jwt.sign({userid : user._id}, JWT_SECRET, { expiresIn : '1h'})
+
+            //set a token as a cookie
+            res.cookie('token', token,{
+                httpOnly: true,
+                secure: NODE_ENV === 'production',
+                sameSite: NODE_ENV === 'production' ? 'none' : 'lax',
+                maxAge : 24 * 60 * 60 * 1000 //24hours
+            })
+
+            return res.status(200).json({message: 'Login Successfully',
+                user: {
+                    id: user._id,
+                    name: user.name,
+                    email: user.email,
+                    role: user.role,
+                    assignedCompany: user.assignedCompany || null
+                }
+            });
         } catch (error) {
              res.status(500).json({message: "Error Logging in", error: error.message})
         }
