@@ -53,7 +53,7 @@ const authController = {
             }
 
             //generte a token
-            const token = jwt.sign({userid : user._id}, JWT_SECRET, { expiresIn : '1h'})
+            const token = jwt.sign({userId : user._id}, JWT_SECRET, { expiresIn : '1h'})
 
             //set a token as a cookie
             res.cookie('token', token,{
@@ -74,6 +74,36 @@ const authController = {
             });
         } catch (error) {
              res.status(500).json({message: "Error Logging in", error: error.message})
+        }
+    },
+    getMe: async(req,res) => {
+        try {
+            //get the user id
+            const userId = req.userId;
+
+            //find the user by id
+            const user = await User.findById(userId).select('-password');
+            
+            //if the user does not exists,return an error
+            if(!user){
+                return res.status(404).json({message: 'User not Found'})
+            }
+
+            //return the user details
+            res.status(200).json({ user })
+        } catch (error) {
+             res.status(500).json({message: 'Error Fetching User Details', error:error.message})
+        }
+    },
+    logout: async(req,res) => {
+        try {
+            res.clearCookie('token', {
+                secure: NODE_ENV === 'production',
+                sameSite: NODE_ENV === 'production' ? 'none' : 'lax'
+            })
+            return res.status(200).json({message: 'Logout Successfully'})
+        } catch (error) {
+            res.status(500).json({message: 'Error logging out', error:error.message})
         }
     }
 }
