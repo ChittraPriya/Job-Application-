@@ -4,7 +4,7 @@ const mongoose = require('mongoose')
 const jobSchema = new mongoose.Schema ({
     title: {type:String, required: true},
     description: {type:String, required: true},
-    requirements: {type:String},
+    requirements: [{type:String}],
     salary: {
         min: {
             type: Number
@@ -35,7 +35,7 @@ const jobSchema = new mongoose.Schema ({
         ref: 'User',
         required: true
     },
-    applicationDeadline: {type: String},
+    applicationDeadLine: {type: String},
     isActive: {type:Boolean, default: true},
 
 }, {timestamps: true})

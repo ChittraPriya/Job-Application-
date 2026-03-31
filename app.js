@@ -4,6 +4,8 @@ const cookieParser = require('cookie-parser');
 const errorRoutes = require('./middlewares/errorRoutes.js');
 const logger = require ('./middlewares/logger.js');
 const companyRouter = require('./routes/companyRoutes.js');
+const jobRouter = require('./routes/jobRoutes.js');
+const applicationRouter = require('./routes/applicationRoutes.js');
 
 //create an express app
 const app = express();
@@ -19,6 +21,9 @@ app.use(logger)
 
 app.use('/api/v1/auth', authRouter)
 app.use('/api/v1/companies', companyRouter);
+app.use('/api/v1/jobs', jobRouter);
+app.use('/api/v1/applications', applicationRouter);
+
 
 //middleware to handle undefined routes
 app.use(errorRoutes)
