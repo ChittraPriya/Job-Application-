@@ -7,7 +7,7 @@ const { JWT_SECRET, NODE_ENV } = require("../utils/config.js")
 const authController = {
     register: async(req, res) => {
         try {
-            //getr details from the request body
+            //get details from the request body
             const {name, email, password} = req.body
 
             //check if the user exists already

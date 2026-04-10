@@ -6,13 +6,15 @@ const jobRouter = express.Router()
 
 //public Routes
 jobRouter.get('/', getAllJobs);
-jobRouter.get('/:id', getJobById);
+
+//public Routes
+jobRouter.get('/recruiter/jobs', isAuthenticated, allowRoles(["recruiter"]),getRecruiterJobs);
+jobRouter.get('/recruiter/jobs/:id/applications', isAuthenticated,allowRoles(["recruiter"]), getJobApplication)
 
 //protected Routes
 jobRouter.post('/', isAuthenticated, allowRoles(["recruiter"]), createJob);
 jobRouter.put('/:id',isAuthenticated, allowRoles(["recruiter"]), updateJob);
 jobRouter.delete('/:id',isAuthenticated,allowRoles(["recruiter"]), deleteJob);
-jobRouter.get('/recruiter/jobs', isAuthenticated, allowRoles(["recruiter"]),getRecruiterJobs);
-jobRouter.get('/recruiter/jobs/:id/applications', isAuthenticated,allowRoles(["recruiter"]), getJobApplication)
 
+jobRouter.get('/:id', getJobById);
 module.exports = jobRouter
